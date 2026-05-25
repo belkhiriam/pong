@@ -10,10 +10,10 @@ void PaddleInit(Paddle *p, float x, float y, Color color, bool isAI) {
 void PaddleUpdate(Paddle *p, float ballY, int upKey, int downKey) {
     if (p->isAI) {
         // AI tracks the ball with a slight delay
-        float center = p->bounds.y + p->bounds.height / 2;
+        float center = p->bounds.y + p->bounds.height / 2.0f;
         float diff   = ballY - center;
-        if (diff > 4)  p->bounds.y += p->speed * 0.88f;
-        if (diff < -4) p->bounds.y -= p->speed * 0.88f;
+        if (diff > 6.0f)  p->bounds.y += p->speed * 0.88f;
+        if (diff < -6.0f) p->bounds.y -= p->speed * 0.88f;
     } else {
         if (IsKeyDown(upKey))   p->bounds.y -= p->speed;
         if (IsKeyDown(downKey)) p->bounds.y += p->speed;

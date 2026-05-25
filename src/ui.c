@@ -13,13 +13,12 @@ void UiDrawNet(Texture2D netSeg) {
     }
 }
 
-void UiDrawScore(Texture2D digits, int scoreL, int scoreR) {
-    DrawDigit(digits, scoreL, 800/2 - 80, 20);
-    DrawDigit(digits, scoreR, 800/2 + 48, 20);
+void UiDrawScore(Texture2D digitsLeft, Texture2D digitsRight, int scoreL, int scoreR) {
+    DrawDigit(digitsLeft, scoreL, 800/2 - 80, 20);
+    DrawDigit(digitsRight, scoreR, 800/2 + 48, 20);
 }
 
-void UiDrawMenu(Texture2D panel, Texture2D btnNormal, Texture2D btnHover,
-                bool hovered, float btnx, float btny, float btnScale) {
+void UiDrawMenu(Texture2D panel, Texture2D btnNormal, Texture2D btnHover,bool hovered, float btnx, float btny, float btnScale) {
     Color neonCyan = GetColor(0x00ffdcff);
     Color neonPink = GetColor(0xff00b4ff);
 
@@ -28,11 +27,11 @@ void UiDrawMenu(Texture2D panel, Texture2D btnNormal, Texture2D btnHover,
     if (hovered) {
         DrawTextureEx(btnHover, (Vector2){ btnx, btny }, 0.0f, btnScale, WHITE);
         DrawTextEx(GetFontDefault(), "PLAY",
-                   (Vector2){ 800/2 - 20, btny + 18 }, 20, 1, neonPink);
+                   (Vector2){ 800/2 - 20, btny + 10 }, 20, 1, neonPink);
     } else {
         DrawTextureEx(btnNormal, (Vector2){ btnx, btny }, 0.0f, btnScale, WHITE);
         DrawTextEx(GetFontDefault(), "PLAY",
-                   (Vector2){ 800/2 - 20, btny + 18 }, 20, 1, neonCyan);
+                   (Vector2){ 800/2 - 20, btny + 10 }, 20, 1, neonCyan);
     }
 }
 

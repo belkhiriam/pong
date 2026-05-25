@@ -18,7 +18,7 @@ static void SpeedUp(Ball *b) {
     b->vel.y = (b->vel.y / speed) * newSpeed;
 }
 
-int BallUpdate(Ball *b, Paddle *left, Paddle *right) {
+int BallUpdate(Ball *b, Paddle *left, Paddle *right,Sound wallHitSound, Sound paddleHitSound) {
     b->pos.x += b->vel.x;
     b->pos.y += b->vel.y;
 
@@ -26,10 +26,12 @@ int BallUpdate(Ball *b, Paddle *left, Paddle *right) {
     if (b->pos.y - b->radius <= 0) {
         b->pos.y = b->radius;
         b->vel.y = fabsf(b->vel.y);
+        PlaySound(wallHitSound);
     }
     if (b->pos.y + b->radius >= 560) {
         b->pos.y = 560 - b->radius;
         b->vel.y = -fabsf(b->vel.y);
+        PlaySound(wallHitSound);
     }
 
     // left paddle collision
@@ -38,6 +40,7 @@ int BallUpdate(Ball *b, Paddle *left, Paddle *right) {
         b->pos.x + b->radius >= left->bounds.x &&
         b->pos.y >= left->bounds.y &&
         b->pos.y <= left->bounds.y + left->bounds.height)
+
     {
         b->pos.x = left->bounds.x + left->bounds.width + b->radius;
         float rel   = (b->pos.y - (left->bounds.y + left->bounds.height / 2))
@@ -47,6 +50,7 @@ int BallUpdate(Ball *b, Paddle *left, Paddle *right) {
         b->vel.x =  fabsf(cosf(angle) * speed);
         b->vel.y =  sinf(angle) * speed;
         SpeedUp(b);
+        PlaySound(paddleHitSound);
     }
 
     // right paddle collision
@@ -64,6 +68,7 @@ int BallUpdate(Ball *b, Paddle *left, Paddle *right) {
         b->vel.x = -fabsf(cosf(angle) * speed);
         b->vel.y =  sinf(angle) * speed;
         SpeedUp(b);
+        PlaySound(paddleHitSound);
     }
 
     // scoring

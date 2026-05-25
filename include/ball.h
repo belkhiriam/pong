@@ -11,7 +11,7 @@ typedef struct {
 } Ball;
 
 void BallInit(Ball *b);
-int  BallUpdate(Ball *b, Paddle *left, Paddle *right); // returns 1 = right scores, -1 = left scores, 0 = nothing
+int  BallUpdate(Ball *b, Paddle *left, Paddle *right, Sound wallHitSound, Sound paddleHitSound); // returns 1 = right scores, -1 = left scores, 0 = nothing
 void BallDraw(Ball *b, Texture2D tex);
 
 #endif
