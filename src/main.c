@@ -51,17 +51,19 @@ int main(void)
     int btnx = screenWidth/2 - (btnNormal.width/2)*btnScale;
     int btny = 200;
 
-    Rectangle btnbounds = { btnx, btny, btnNormal.width*btnScale, btnNormal.height*btnScale };
+    Rectangle btn1bounds = { btnx, btny, btnNormal.width*btnScale, btnNormal.height*btnScale };
+    Rectangle btn2bounds = { btnx, btny + btnNormal.height*btnScale, btnNormal.width*btnScale, btnNormal.height*btnScale };
     Vector2 mousePoint ;
 
-    bool hovered = false;
-    bool wasHovered = false;
+    bool hovered1 = false, hovered2 = false;
+    bool wasHovered1 = false, wasHovered2 = false;
+    bool isAI = false;
 
     // padlles
     Paddle paddleL, paddleR;
     PaddleInit(&paddleL, 50, screenHeight/2 - 32, neonCyan, false);
-    PaddleInit(&paddleR, screenWidth - 50, screenHeight/2 - 32, neonPink, true);
-    
+    PaddleInit(&paddleR, screenWidth - 50, screenHeight/2 - 32, neonPink, false);
+   
 
     //ball
     Ball ball;
@@ -95,12 +97,22 @@ int main(void)
     // --- UPDATE ---
     if (state == STATE_MENU) {
         UpdateMusicStream(music);
-        hovered = CheckCollisionPointRec(mousePoint, btnbounds);
-        if (hovered && !wasHovered) PlaySound(btnHoverSound);
-        wasHovered = hovered;
+        hovered1 = CheckCollisionPointRec(mousePoint, btn1bounds);
+        hovered2 = CheckCollisionPointRec(mousePoint, btn2bounds);
+        if (hovered1 && !wasHovered1) PlaySound(btnHoverSound);
+        wasHovered1 = hovered1;
 
-        if (hovered && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+        if (hovered1 && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
             PlaySound(gameStartSound);
+            isAI = false;
+            state = STATE_PLAYING;  // switch state
+        }
+        if (hovered2 && !wasHovered2) PlaySound(btnHoverSound);
+        wasHovered2 = hovered2;
+
+        if (hovered2 && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
+            PlaySound(gameStartSound);
+            isAI = true;
             state = STATE_PLAYING;  // switch state
         }
     }
@@ -122,7 +134,14 @@ int main(void)
 
         
         PaddleUpdate(&paddleL, ball.pos.y, KEY_W, KEY_S);
-        PaddleUpdate(&paddleR, ball.pos.y, KEY_UP, KEY_DOWN);
+        if  (!isAI) {
+           PaddleUpdate(&paddleR, ball.pos.y, KEY_UP, KEY_DOWN);
+        }
+        else{
+            paddleR.isAI = true;
+            PaddleUpdate(&paddleR, ball.pos.y, 0, 0);
+        }
+        
         
     }
     else if (state == STATE_GAMEOVER) {
@@ -131,7 +150,8 @@ int main(void)
         scoreL = 0; scoreR = 0;
         BallInit(&ball);
         PaddleInit(&paddleL, 30,  screenHeight/2 - 32, neonCyan, false);
-        PaddleInit(&paddleR, 758, screenHeight/2 - 32, neonPink, true);
+        PaddleInit(&paddleR, 758, screenHeight/2 - 32, neonPink, false);
+        
         state = STATE_MENU;
       }
     }
@@ -142,13 +162,16 @@ int main(void)
         
         if (state == STATE_MENU) {
             
-           UiDrawMenu(panel, btnNormal, btnHover, hovered, btnx, btny, btnScale);
+           UiDrawMenu(panel, btnNormal, btnHover, hovered1, hovered2, btnx, btny, btnScale);
         }
         else if (state == STATE_PLAYING) {
             // draw paddles, ball, net, score etc
             DrawTextureEx(framePlaying, (Vector2){ 0, 0 }, 0.0f, 1.0f, WHITE);
             PaddleDraw(&paddleL, paddleLeft);
+            
             PaddleDraw(&paddleR, paddleRight);
+            
+            
             UiDrawNet(netSeg);
             UiDrawScore(digitsCyan, digitsPink, scoreL, scoreR);
             BallDraw(&ball, ballTex);

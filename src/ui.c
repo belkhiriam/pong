@@ -18,13 +18,13 @@ void UiDrawScore(Texture2D digitsLeft, Texture2D digitsRight, int scoreL, int sc
     DrawDigit(digitsRight, scoreR, 800/2 + 48, 20);
 }
 
-void UiDrawMenu(Texture2D panel, Texture2D btnNormal, Texture2D btnHover,bool hovered, float btnx, float btny, float btnScale) {
+void UiDrawMenu(Texture2D panel, Texture2D btnNormal, Texture2D btnHover,bool hovered1, bool hovered2, float btnx, float btny, float btnScale) {
     Color neonCyan = GetColor(0x00ffdcff);
     Color neonPink = GetColor(0xff00b4ff);
 
     DrawTextureEx(panel, (Vector2){ 0, 0 }, 0.0f, 2.0f, WHITE);
 
-    if (hovered) {
+    if (hovered1) {
         DrawTextureEx(btnHover, (Vector2){ btnx, btny }, 0.0f, btnScale, WHITE);
         DrawTextEx(GetFontDefault(), "PLAY",
                    (Vector2){ 800/2 - 20, btny + 10 }, 20, 1, neonPink);
@@ -32,6 +32,15 @@ void UiDrawMenu(Texture2D panel, Texture2D btnNormal, Texture2D btnHover,bool ho
         DrawTextureEx(btnNormal, (Vector2){ btnx, btny }, 0.0f, btnScale, WHITE);
         DrawTextEx(GetFontDefault(), "PLAY",
                    (Vector2){ 800/2 - 20, btny + 10 }, 20, 1, neonCyan);
+    }
+    if (hovered2) {
+        DrawTextureEx(btnHover, (Vector2){ btnx, btny + btnNormal.height*btnScale }, 0.0f, btnScale, WHITE);
+        DrawTextEx(GetFontDefault(), "PLAY VS AI",
+                   (Vector2){ 800/2 - 60, btny + 10 + btnNormal.height*btnScale }, 20, 1, neonPink);
+    } else {
+        DrawTextureEx(btnNormal, (Vector2){ btnx, btny + btnNormal.height*btnScale }, 0.0f, btnScale, WHITE);
+        DrawTextEx(GetFontDefault(), "PLAY VS AI",
+                   (Vector2){ 800/2 - 60, btny + 10 + btnNormal.height*btnScale }, 20, 1, neonCyan);
     }
 }
 
