@@ -1,0 +1,4 @@
+build/game
+build/game.exe
+*.o
+
