@@ -7,11 +7,11 @@ void BallInit(Ball *b) {
     // random starting direction
     float angle = ((GetRandomValue(-30, 30)) * DEG2RAD);
     float dir   = GetRandomValue(0, 1) ? 1.0f : -1.0f;
-    b->vel = (Vector2){ cosf(angle) * 5.0f * dir, sinf(angle) * 5.0f };
+    b->vel = (Vector2){ cosf(angle) * 300.0f * dir, sinf(angle) * 300.0f };
 }
 
 static void SpeedUp(Ball *b) {
-    float maxSpeed = 14.0f;
+    float maxSpeed = 840.0f;
     float speed = sqrtf(b->vel.x * b->vel.x + b->vel.y * b->vel.y);
     float newSpeed = fminf(speed * 1.04f, maxSpeed);
     b->vel.x = (b->vel.x / speed) * newSpeed;
@@ -20,10 +20,11 @@ static void SpeedUp(Ball *b) {
 
 int BallUpdate(Ball *b, Paddle *left, Paddle *right,Sound wallHitSound, Sound paddleHitSound,Vector2 *hitPos, bool *didHit) 
 {
+    float dt = GetFrameTime();
     *didHit = false;
 
-    b->pos.x += b->vel.x;
-    b->pos.y += b->vel.y;
+    b->pos.x += b->vel.x * dt;
+    b->pos.y += b->vel.y * dt;
 
     // top / bottom wall bounce
     if (b->pos.y - b->radius <= 0) {
