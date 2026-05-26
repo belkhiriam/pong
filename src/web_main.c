@@ -123,12 +123,12 @@ int main(void) {
     netSeg       = LoadTexture("assets/net_segment.png");
     digitsCyan   = LoadTexture("assets/digits.png");
     digitsPink   = LoadTexture("assets/digits_pink.png");
-    panel        = LoadTexture("assets/ui_panel.png");
+    panel        = LoadTexture("assets/frame_menu.png");
     framePlaying = LoadTexture("assets/frame_playing_v3.png");
-    btn1v1Normal = LoadTexture("assets/btn_1v1_normal.png");
-    btn1v1Hover  = LoadTexture("assets/btn_1v1_hover.png");
-    btnAINormal  = LoadTexture("assets/btn_vs_ai_normal.png");
-    btnAIHover   = LoadTexture("assets/btn_vs_ai_hover.png");
+    btn1v1Normal = LoadTexture("assets/btn_1v1_normal_f.png");
+    btn1v1Hover  = LoadTexture("assets/btn_1v1_hover_f.png");
+    btnAINormal  = LoadTexture("assets/btn_vs_ai_normal_f.png");
+    btnAIHover   = LoadTexture("assets/btn_vs_ai_hover_f.png");
     particle     = LoadTexture("assets/particle.png");
 
     music         = LoadMusicStream("assets/music_loop.wav");
