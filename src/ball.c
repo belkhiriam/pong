@@ -18,7 +18,10 @@ static void SpeedUp(Ball *b) {
     b->vel.y = (b->vel.y / speed) * newSpeed;
 }
 
-int BallUpdate(Ball *b, Paddle *left, Paddle *right,Sound wallHitSound, Sound paddleHitSound) {
+int BallUpdate(Ball *b, Paddle *left, Paddle *right,Sound wallHitSound, Sound paddleHitSound,Vector2 *hitPos, bool *didHit) 
+{
+    *didHit = false;
+
     b->pos.x += b->vel.x;
     b->pos.y += b->vel.y;
 
@@ -51,6 +54,9 @@ int BallUpdate(Ball *b, Paddle *left, Paddle *right,Sound wallHitSound, Sound pa
         b->vel.y =  sinf(angle) * speed;
         SpeedUp(b);
         PlaySound(paddleHitSound);
+
+        *hitPos = b->pos;
+        *didHit = true;
     }
 
     // right paddle collision
@@ -69,6 +75,9 @@ int BallUpdate(Ball *b, Paddle *left, Paddle *right,Sound wallHitSound, Sound pa
         b->vel.y =  sinf(angle) * speed;
         SpeedUp(b);
         PlaySound(paddleHitSound);
+
+        *hitPos = b->pos;
+        *didHit = true;
     }
 
     // scoring

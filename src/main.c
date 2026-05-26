@@ -3,6 +3,7 @@
 #include "ball.h"
 #include "paddle.h"
 #include "ui.h"
+#include "particles.h"
 
 
 typedef enum { STATE_MENU, STATE_PLAYING, STATE_GAMEOVER } GameState;
@@ -12,7 +13,7 @@ int main(void)
     //Initialize window
     const int screenWidth = 800;
     const int screenHeight = 560;
-    InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
+    InitWindow(screenWidth, screenHeight, "pong");
     InitAudioDevice();      // Initialize audio device
 
     // Load textures
@@ -22,10 +23,13 @@ int main(void)
     Texture2D netSeg      = LoadTexture("assets/net_segment.png");
     Texture2D digitsCyan  = LoadTexture("assets/digits.png");   // sprite sheet
     Texture2D digitsPink  = LoadTexture("assets/digits_pink.png");   // sprite sheet
-    Texture2D panel       = LoadTexture("assets/ui_panel.png");
-    Texture2D framePlaying = LoadTexture("assets/frame_playing.png");
-    Texture2D btnNormal   = LoadTexture("assets/button_play.png");
-    Texture2D btnHover    = LoadTexture("assets/button_play_hover.png");
+    Texture2D panel       = LoadTexture("assets/frame_menu.png");
+    Texture2D framePlaying = LoadTexture("assets/frame_playing_v3.png");
+    Texture2D btn1v1Normal   = LoadTexture("assets/btn_1v1_normal_f.png");
+    Texture2D btn1v1Hover    = LoadTexture("assets/btn_1v1_hover_f.png");
+    Texture2D btnAINormal    = LoadTexture("assets/btn_vs_ai_normal_f.png");
+    Texture2D btnAIHover     = LoadTexture("assets/btn_vs_ai_hover_f.png");
+
     Texture2D particle    = LoadTexture("assets/particle.png");
     
     // Load sounds and music
@@ -48,11 +52,11 @@ int main(void)
     
     // Button setup
     float btnScale = 0.75f;
-    int btnx = screenWidth/2 - (btnNormal.width/2)*btnScale;
+    int btnx = screenWidth/2 - (btn1v1Normal.width/2)*btnScale;
     int btny = 200;
 
-    Rectangle btn1bounds = { btnx, btny, btnNormal.width*btnScale, btnNormal.height*btnScale };
-    Rectangle btn2bounds = { btnx, btny + btnNormal.height*btnScale, btnNormal.width*btnScale, btnNormal.height*btnScale };
+    Rectangle btn1v1bounds = { btnx, btny, btn1v1Normal.width*btnScale, btn1v1Normal.height*btnScale };
+    Rectangle btnAINbounds = { btnx, btny + btnAINormal.height*btnScale, btnAINormal.width*btnScale, btnAINormal.height*btnScale };
     Vector2 mousePoint ;
 
     bool hovered1 = false, hovered2 = false;
@@ -72,6 +76,11 @@ int main(void)
     // scores
     int scoreL = 0;
     int scoreR = 0; 
+    
+    // particles
+    ParticleSystem ps = {0};  // zero-initializes everything
+    Vector2 hitPos = {0};
+    bool didHit = false;
 
 
 
@@ -97,8 +106,8 @@ int main(void)
     // --- UPDATE ---
     if (state == STATE_MENU) {
         UpdateMusicStream(music);
-        hovered1 = CheckCollisionPointRec(mousePoint, btn1bounds);
-        hovered2 = CheckCollisionPointRec(mousePoint, btn2bounds);
+        hovered1 = CheckCollisionPointRec(mousePoint, btn1v1bounds);
+        hovered2 = CheckCollisionPointRec(mousePoint, btnAINbounds);
         if (hovered1 && !wasHovered1) PlaySound(btnHoverSound);
         wasHovered1 = hovered1;
 
@@ -113,20 +122,31 @@ int main(void)
         if (hovered2 && IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) {
             PlaySound(gameStartSound);
             isAI = true;
+            paddleR.isAI = true;
             state = STATE_PLAYING;  // switch state
         }
     }
     else if (state == STATE_PLAYING) {
         // ball movement, paddle input, collision etc goes here
-        int scored = BallUpdate(&ball, &paddleL, &paddleR, wallHitSound, paddleHitSound);
+        int scored = BallUpdate(&ball, &paddleL, &paddleR, wallHitSound, paddleHitSound,&hitPos, &didHit);
+        if (didHit) {
+        // figure out which paddle was hit by which side the ball is on
+        Color burstColor = (ball.vel.x > 0) ? neonCyan : neonPink;
+        ParticleSpawn(&ps, hitPos, burstColor, 20);
+        }
+
         if (scored ==  1) {
             PlaySound(scoreSound);
             scoreL++;
+            ParticleSpawn(&ps, (Vector2){0, ball.pos.y},   neonCyan, 35); // left wall
         }
+
         if (scored == -1) {
             PlaySound(scoreSound);
             scoreR++;
+            ParticleSpawn(&ps, (Vector2){800, ball.pos.y}, neonPink, 35); // right wall
         }
+
         if (scoreL >= 7 || scoreR >= 7) {
             PlaySound(gameOverSound);
             state = STATE_GAMEOVER;
@@ -138,10 +158,11 @@ int main(void)
            PaddleUpdate(&paddleR, ball.pos.y, KEY_UP, KEY_DOWN);
         }
         else{
-            paddleR.isAI = true;
+            
             PaddleUpdate(&paddleR, ball.pos.y, 0, 0);
         }
         
+        ParticleUpdate(&ps);
         
     }
     else if (state == STATE_GAMEOVER) {
@@ -162,7 +183,7 @@ int main(void)
         
         if (state == STATE_MENU) {
             
-           UiDrawMenu(panel, btnNormal, btnHover, hovered1, hovered2, btnx, btny, btnScale);
+           UiDrawMenu(panel, btn1v1Normal, btn1v1Hover, btnAINormal, btnAIHover, hovered1, hovered2, btnx, btny, btnScale);
         }
         else if (state == STATE_PLAYING) {
             // draw paddles, ball, net, score etc
@@ -175,7 +196,7 @@ int main(void)
             UiDrawNet(netSeg);
             UiDrawScore(digitsCyan, digitsPink, scoreL, scoreR);
             BallDraw(&ball, ballTex);
-            
+            ParticleDraw(&ps, particle);
 
         }
         else if (state == STATE_GAMEOVER) {
@@ -187,8 +208,10 @@ int main(void)
     }
    
     UnloadTexture(panel);
-    UnloadTexture(btnNormal);
-    UnloadTexture(btnHover);
+    UnloadTexture(btn1v1Normal);
+    UnloadTexture(btn1v1Hover);
+    UnloadTexture(btnAINormal);
+    UnloadTexture(btnAIHover);
     UnloadTexture(particle);
     UnloadTexture(ballTex);
     UnloadTexture(paddleLeft);

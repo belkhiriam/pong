@@ -18,29 +18,25 @@ void UiDrawScore(Texture2D digitsLeft, Texture2D digitsRight, int scoreL, int sc
     DrawDigit(digitsRight, scoreR, 800/2 + 48, 20);
 }
 
-void UiDrawMenu(Texture2D panel, Texture2D btnNormal, Texture2D btnHover,bool hovered1, bool hovered2, float btnx, float btny, float btnScale) {
+void UiDrawMenu(Texture2D panel, Texture2D btn1v1Normal, Texture2D btn1v1Hover, Texture2D btnAINormal, Texture2D btnAIHover, bool hovered1, bool hovered2, float btnx, float btny, float btnScale) {
     Color neonCyan = GetColor(0x00ffdcff);
     Color neonPink = GetColor(0xff00b4ff);
 
-    DrawTextureEx(panel, (Vector2){ 0, 0 }, 0.0f, 2.0f, WHITE);
+    DrawTextureEx(panel, (Vector2){ 0, 0 }, 0.0f, 1.0f, WHITE);
 
     if (hovered1) {
-        DrawTextureEx(btnHover, (Vector2){ btnx, btny }, 0.0f, btnScale, WHITE);
-        DrawTextEx(GetFontDefault(), "PLAY",
-                   (Vector2){ 800/2 - 20, btny + 10 }, 20, 1, neonPink);
+        DrawTextureEx(btn1v1Hover, (Vector2){ btnx, btny }, 0.0f, btnScale, WHITE);
+        
     } else {
-        DrawTextureEx(btnNormal, (Vector2){ btnx, btny }, 0.0f, btnScale, WHITE);
-        DrawTextEx(GetFontDefault(), "PLAY",
-                   (Vector2){ 800/2 - 20, btny + 10 }, 20, 1, neonCyan);
+        DrawTextureEx(btn1v1Normal, (Vector2){ btnx, btny }, 0.0f, btnScale, WHITE);
+        
     }
     if (hovered2) {
-        DrawTextureEx(btnHover, (Vector2){ btnx, btny + btnNormal.height*btnScale }, 0.0f, btnScale, WHITE);
-        DrawTextEx(GetFontDefault(), "PLAY VS AI",
-                   (Vector2){ 800/2 - 60, btny + 10 + btnNormal.height*btnScale }, 20, 1, neonPink);
+        DrawTextureEx(btnAIHover, (Vector2){ btnx, btny + btn1v1Normal.height*btnScale }, 0.0f, btnScale, WHITE);
+        
     } else {
-        DrawTextureEx(btnNormal, (Vector2){ btnx, btny + btnNormal.height*btnScale }, 0.0f, btnScale, WHITE);
-        DrawTextEx(GetFontDefault(), "PLAY VS AI",
-                   (Vector2){ 800/2 - 60, btny + 10 + btnNormal.height*btnScale }, 20, 1, neonCyan);
+        DrawTextureEx(btnAINormal, (Vector2){ btnx, btny + btn1v1Normal.height*btnScale }, 0.0f, btnScale, WHITE);
+        
     }
 }
 

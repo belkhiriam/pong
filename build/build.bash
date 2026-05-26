@@ -6,6 +6,7 @@ cc \
   "$ROOT/src/paddle.c" \
   "$ROOT/src/ball.c" \
   "$ROOT/src/ui.c" \
+  "$ROOT/src/particles.c" \
   -I"$ROOT/include" \
   -lraylib -lGL -lm -lpthread -ldl -lrt -lX11 \
   -o "$ROOT/build/game"
