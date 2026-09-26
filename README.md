@@ -3,10 +3,10 @@
 A classic pong game built in C using [raylib](https://www.raylib.com/). Supports local 1v1, VS AI, particles, sound effects, and runs in the browser via WebAssembly.
 
 ## Play
-🎮 [Play in browser](https://your-username.itch.io/pong)
+🎮 [Play in browser](https://ruki0.itch.io/pong)
 
 ## Preview
-![preview](assets/preview.png)
+![preview](assets/pongprev.png)
 
 ## Features
 - 1v1 local multiplayer
@@ -25,8 +25,7 @@ A classic pong game built in C using [raylib](https://www.raylib.com/). Supports
 | Move Down | `S` | `↓` |
 | Restart | `R` | `R` |
 
-### Mobile (browser)
-Tap the left side of the screen to control Player 1, right side for Player 2. Tap the top half to move up, bottom half to move down.
+
 
 ## Building
 
@@ -54,3 +53,30 @@ python3 -m http.server 8080
 Open `http://localhost:8080` in your browser.
 
 ## Project Structure
+
+pong/
+├── src/
+│ ├── main.c # desktop entry point
+│ ├── web_main.c # web/WASM entry point
+│ ├── ball.c
+│ ├── paddle.c
+│ ├── particle.c
+│ └── ui.c
+├── include/
+│ ├── ball.h
+│ ├── paddle.h
+│ ├── particle.h
+│ └── ui.h
+├── assets/ # textures, sounds, music
+└── build/
+├── build.bash # desktop build script
+└── build_web.bash # web build script
+
+
+
+## Dependencies
+- [raylib](https://www.raylib.com/) — graphics, audio, input
+- [Emscripten](https://emscripten.org/) — web build only
+
+## License
+MIT
