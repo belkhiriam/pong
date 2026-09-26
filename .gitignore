@@ -1,4 +1,6 @@
 build/game
-build/game.exe
+build/web/
 *.o
-
+*.a
+.idea/
+saved_main.c
