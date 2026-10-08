@@ -54,23 +54,27 @@ Open `http://localhost:8080` in your browser.
 
 ## Project Structure
 
+## Project Structure
+
+```
 pong/
-├── src/
-│ ├── main.c # desktop entry point
-│ ├── web_main.c # web/WASM entry point
-│ ├── ball.c
-│ ├── paddle.c
-│ ├── particle.c
-│ └── ui.c
+├── assets/
 ├── include/
-│ ├── ball.h
-│ ├── paddle.h
-│ ├── particle.h
-│ └── ui.h
-├── assets/ # textures, sounds, music
+│   ├── ball.h
+│   ├── paddle.h
+│   ├── particle.h
+│   └── ui.h
+├── src/
+│   ├── ball.c
+│   ├── main.c
+│   ├── paddle.c
+│   ├── particle.c
+│   ├── ui.c
+│   └── web_main.c
 └── build/
-├── build.bash # desktop build script
-└── build_web.bash # web build script
+    ├── build.bash
+    └── build_web.bash
+```
 
 
 
